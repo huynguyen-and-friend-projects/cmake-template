@@ -20,8 +20,7 @@ override COLOUR_CYAN := \033[36m
 override STYLE_BOLD := \033[1m
 override COLOUR_AND_STYLE_RESET := \033[0m
 
-# install packages as configured in conanfile.py,
-# and bring the two environment scripts up.
+# install packages as configured in conanfile.py
 .PHONY: conan-install
 conan-install:
 	mkdir -p $(BUILD_DIR)
@@ -61,7 +60,7 @@ generate:
 	cmake	-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
 		-DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-		-DCMAKE_TOOLCHAIN_FILE=$(BUILD_DIR)/$(BUILD_TYPE)/generators/conan_toolchain.cmake \
+		-DCMAKE_TOOLCHAIN_FILE=$(GENERATOR_DIR)conan_toolchain.cmake \
 		-G $(GENERATOR) -B $(BUILD_DIR)
 
 # further configure CMake options
