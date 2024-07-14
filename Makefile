@@ -46,13 +46,15 @@ conan-option:
 	@printf "$(COLOUR_AND_STYLE_RESET)"
 	@echo
 
+GENERATOR_DIR := $(BUILD_DIR)/$(BUILD_TYPE)/generators
+
 .PHONY: conan-venv-help
 conan-venv-help:
 	@echo
-	@printf "$(COLOUR_GREEN)To activate Conan's environment\
-$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)sh $(MAKEFILE_DIR)/conanbuild.sh\n$(COLOUR_AND_STYLE_RESET)"
-	@printf "$(COLOUR_GREEN)To deactivate Conan's environment\
-$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)sh $(MAKEFILE_DIR)/deactivate_conanbuild.sh\n$(COLOUR_AND_STYLE_RESET)"
+	@printf "$(COLOUR_GREEN)To activate Conan's environment, run the script\
+$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(GENERATOR_DIR) -name "conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
+	@printf "$(COLOUR_GREEN)To deactivate Conan's environment, run the script\
+$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(GENERATOR_DIR) -name "deactivate_conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
 	@echo
 
 # Generate CMake with some defaults
