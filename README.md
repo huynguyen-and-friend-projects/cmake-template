@@ -56,9 +56,15 @@
   use either of the listed two methods for consistent results.
 
 - Q: How about Catch instead of Google Test?
-- A: You're on your own. But here's [the Catch2 documentation on CMake](https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md#top).
+- A: You're on your own. But here's [the Catch2 documentation for CMake](https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md#top).
 
 - Q: How to use Conan?
+- A: You can use the premade Makefile:
+  - `make conan-install [CONAN_OPTIONS="[LIST OF OPTIONS]"]`
+    - View options and their defaults with the command `make conan-option`
+    - Check which packages of which versions are installed in [conanfile.py](./conanfile.py)
+    - Example: `CONAN_OPTIONS="install_cmake=False install_ninja=True install_ccache=False"`
+  - After that, run the newly symlinked file.
 
 - Q: How to use a different generator?
 - A: Say, you want to use Ninja.
@@ -76,4 +82,9 @@
   -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ${ALL OTHER OPTIONS}`.
 
 - Q: Not liking CMake.
-- A: Same :sad:.
+- A: Same :sob:.
+
+## To-do
+
+- Document the options inside the [Makefile](./Makefile)
+  - For now, you need to read through the Makefile a little bit.
