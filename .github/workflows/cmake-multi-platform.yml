@@ -66,14 +66,14 @@ jobs:
         -o options/all:install_make=True
 
     - name: Activate Conan environment (Windows)
-      if: matrix.os == windows-latest
+      if: matrix.os == 'windows-latest'
       run: |
         cd ${{ steps.strings.output.build-output-dir }}/${{ matrix.build_type }}/generators
         &&
         conanbuild.bat
 
     - name: Activate Conan environment (Linux)
-      if: matrix.os == ubuntu-latest
+      if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{ steps.strings.output.build-output-dir }}/${{ matrix.build_type }}/generators
         &&
