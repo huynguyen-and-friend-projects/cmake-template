@@ -10,12 +10,14 @@ class SampleLibRecipe(ConanFile):
             "install_cmake": [True, False],
             "install_ninja": [True, False],
             "install_ccache": [True, False],
+            "install_make": [True, False],
     }
 
     default_options = {
             "install_cmake": False,
             "install_ninja": False,
             "install_ccache": False,
+            "install_make": False,
     }
 
     # find packages in https://conan.io/center
