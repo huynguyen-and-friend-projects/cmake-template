@@ -62,6 +62,7 @@ jobs:
     - name: Install Conan packages
       run: >
         conan install .
+        --output-folder=${{ steps.strings.output.build-output-dir }}
         --build=missing
         --settings=build_type=${{ matrix.build_type }}
         -o options/all:install_ccache=True
@@ -88,6 +89,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DENABLE_UNIT_TEST=ON
+        -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.build-output-dir }}/conan_toolchain.cmake
         -S ${{ github.workspace }}
 
       # NOTE: this action doesn't check if Conan is properly working

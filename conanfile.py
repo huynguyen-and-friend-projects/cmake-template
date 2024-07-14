@@ -37,6 +37,3 @@ class SampleLibRecipe(ConanFile):
 
         if self.options.install_ccache:
             self.tool_requires("ccache/4.10")
-
-    def layout(self):
-        cmake_layout(self)

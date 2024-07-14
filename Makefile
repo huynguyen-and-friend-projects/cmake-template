@@ -22,7 +22,7 @@ override COLOUR_AND_STYLE_RESET := \033[0m
 .PHONY: conan-install
 conan-install:
 	mkdir -p $(BUILD_DIR)
-	conan install . --output-folder=$(MAKEFILE_DIR) --build=missing \
+	conan install . --output-folder=$(BUILD_DIR) --build=missing \
 		--settings=build_type=$(BUILD_TYPE) \
 		$(CONAN_OPTIONS_CMDLINE)
 	@make conan-venv-help
@@ -40,15 +40,13 @@ conan-option:
 	@printf "$(COLOUR_AND_STYLE_RESET)"
 	@echo
 
-GENERATOR_DIR := $(BUILD_DIR)/$(BUILD_TYPE)/generators
-
 .PHONY: conan-venv-help
 conan-venv-help:
 	@echo
 	@printf "$(COLOUR_GREEN)To activate Conan's environment, run the script\
-$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(GENERATOR_DIR) -name "conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
+$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(BUILD_DIR) -name "conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
 	@printf "$(COLOUR_GREEN)To deactivate Conan's environment, run the script\
-$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(GENERATOR_DIR) -name "deactivate_conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
+$(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(BUILD_DIR) -name "deactivate_conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
 	@echo
 
 # Generate CMake with some defaults
@@ -58,7 +56,7 @@ generate:
 	cmake	-DCMAKE_BUILD_TYPE=$(BUILD_TYPE) \
 		-DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-		-DCMAKE_TOOLCHAIN_FILE=$(GENERATOR_DIR)conan_toolchain.cmake \
+		-DCMAKE_TOOLCHAIN_FILE=$(BUILD_DIR)/conan_toolchain.cmake \
 		-G $(GENERATOR) -B $(BUILD_DIR)
 
 # further configure CMake options
