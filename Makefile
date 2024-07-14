@@ -9,8 +9,6 @@ override MAKEFILE_DIR := $(patsubst %/Makefile,%,$(MAKEFILE_PATH))
 override BUILD_DIR := $(MAKEFILE_DIR)/build
 CONAN_OPTIONS := install_cmake=False
 BUILD_TYPE := Debug
-# NOTE: override GENERATOR if you don't want to use Ninja
-# eg, make generate GENERATOR="Unix Makefile"
 GENERATOR := "Ninja"
 CONAN_OPTIONS := "install_cmake=False install_ccache=False"
 override CONAN_OPTIONS_CMDLINE := $(foreach opt,$(CONAN_OPTIONS),$(patsubst %,-o options/all:%,$(opt)))
