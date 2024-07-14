@@ -1,0 +1,12 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+exec_prefix=
+
+Name: Sample Project
+Description: Toy project 
+VERSION: @PROJECT_VERSION@
+Libs: -L${libdir} -lsample_lib
+Libs.private: 
+Requires.private: 
+Cflags: -I${includedir} -I${includedir}/sample_lib_internal

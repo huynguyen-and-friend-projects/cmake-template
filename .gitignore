@@ -1,0 +1,11 @@
+compile_commands.json
+build/*
+.vscode
+.cache
+.ccls-cache
+include/*
+lib64/*
+lib/*
+conanbuild.sh
+deactivate_conanbuild.sh
+CMakeUserPresets.json

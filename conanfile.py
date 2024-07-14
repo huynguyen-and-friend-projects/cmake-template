@@ -1,0 +1,40 @@
+from conan import ConanFile
+from conan.tools.cmake import cmake_layout
+
+# docs: https://docs.conan.io/2/tutorial/consuming_packages/the_flexibility_of_conanfile_py.html
+
+class SampleLibRecipe(ConanFile):
+    settings = "os", "compiler", "build_type", "arch"
+    generators = "CMakeToolchain", "CMakeDeps"
+    options = {
+            "install_cmake": [True, False],
+            "install_ninja": [True, False],
+            "install_ccache": [True, False],
+    }
+
+    default_options = {
+            "install_cmake": False,
+            "install_ninja": False,
+            "install_ccache": False,
+    }
+
+    # find packages in https://conan.io/center
+
+    def requirements(self):
+        # add requirements as needed
+        # you ain't escaping from unit testing
+        self.requires("gtest/1.14.0")
+
+    def build_requirements(self):
+        # bleeding edge stuff.
+        if self.options.install_cmake:
+            self.tool_requires("cmake/3.30.0")
+        
+        if self.options.install_ninja:
+            self.tool_requires("ninja/1.12.1")
+
+        if self.options.install_ccache:
+            self.tool_requires("ccache/4.10")
+
+    def layout(self):
+        cmake_layout(self)
