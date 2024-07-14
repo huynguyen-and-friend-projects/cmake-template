@@ -28,9 +28,6 @@ conan-install:
 	conan install . --output-folder=$(MAKEFILE_DIR) --build=missing \
 		--settings=build_type=$(BUILD_TYPE) \
 		$(CONAN_OPTIONS_CMDLINE)
-	@rm -f $(MAKEFILE_DIR)/conanbuild.sh $(MAKEFILE_DIR)/deactivate_conanbuild.sh
-	@ln -s $(BUILD_DIR)/$(BUILD_TYPE)/generators/conanbuild.sh $(MAKEFILE_DIR)/conanbuild.sh
-	@ln -s $(BUILD_DIR)/$(BUILD_TYPE)/generators/deactivate_conanbuild.sh $(MAKEFILE_DIR)/deactivate_conanbuild.sh
 	@make conan-venv-help
 
 # list custom options inside the conanfile.py
