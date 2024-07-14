@@ -54,6 +54,31 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Install Conan
+      run: pip install conan
+
+    - name: Install Conan packages
+      run: |
+        conan install .
+        --build=missing
+        --settings=build_type=${{ matrix.build_type }}
+        -o options/all:install_ccache=True
+        -o options/all:install_make=True
+
+    - name: Activate Conan environment (Windows)
+      if: matrix.os == windows-latest
+      run: |
+        cd ${{ steps.strings.output.build-output-dir }}/${{ matrix.build_type }}/generators
+        &&
+        conanbuild.bat
+
+    - name: Activate Conan environment (Linux)
+      if: matrix.os == ubuntu-latest
+      run: |
+        cd ${{ steps.strings.output.build-output-dir }}/${{ matrix.build_type }}/generators
+        &&
+        source conanbuild.sh
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
