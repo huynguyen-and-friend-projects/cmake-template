@@ -55,7 +55,10 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
     - name: Install Conan
-      run: pip install conan
+      run: |
+        pip install conan
+        &&
+        conan profile detect --force
 
     - name: Install Conan packages
       run: |
