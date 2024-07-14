@@ -60,7 +60,7 @@ jobs:
         conan profile detect --force
 
     - name: Install Conan packages
-      run: |
+      run: >
         conan install .
         --build=missing
         --settings=build_type=${{ matrix.build_type }}
