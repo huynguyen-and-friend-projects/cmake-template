@@ -57,7 +57,6 @@ jobs:
     - name: Install Conan
       run: |
         pip install conan
-        &&
         conan profile detect --force
 
     - name: Install Conan packages
@@ -72,14 +71,12 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         cd ${{ steps.strings.output.build-output-dir }}/${{ matrix.build_type }}/generators
-        &&
         conanbuild.bat
 
     - name: Activate Conan environment (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{ steps.strings.output.build-output-dir }}/${{ matrix.build_type }}/generators
-        &&
         source conanbuild.sh
 
     - name: Configure CMake
