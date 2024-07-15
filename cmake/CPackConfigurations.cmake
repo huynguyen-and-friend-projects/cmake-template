@@ -1,4 +1,7 @@
-# WIP
+# ##############################################################################
+# Configure CPack
+# ##############################################################################
+
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
 set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
