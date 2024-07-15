@@ -15,7 +15,5 @@ add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_${CMAKE_CXX_STANDARD})
 include(CMakeOptions)
 
-install(TARGETS project_options DESTINATION ${CMAKE_INSTALL_LIBDIR})
-
 add_subdirectory(src)
 include(CPackConfigurations)
