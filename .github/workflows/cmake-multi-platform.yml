@@ -81,6 +81,9 @@ jobs:
         cd ${{ steps.strings.outputs.build-output-dir }}
         source conanbuild.sh
 
+    - name: Test virtual environment
+      run: make --version
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
@@ -92,11 +95,6 @@ jobs:
         -DENABLE_UNIT_TEST=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.build-output-dir }}/conan_toolchain.cmake
         -S ${{ github.workspace }}
-
-    - name: Configure CMake through Makefile
-      run: |
-        cd ${{ github.workspace }}
-        make generate
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
