@@ -31,9 +31,7 @@ add_executable(sample_exe sample_lib_exe.cxx)
 
 set_target_properties(
   sample_exe
-  PROPERTIES VERSION ${PROJECT_VERSION}
-             PRIVATE_HEADER
-             ${PROJECT_BINARY_DIR}/src/internal/sample_lib_exe_.hxx)
+  PROPERTIES VERSION ${PROJECT_VERSION})
 target_link_libraries(sample_exe PRIVATE project_options sample_lib)
 
 target_include_directories(

@@ -27,10 +27,7 @@ install(
   DESTINATION ${CMAKE_INSTALL_MANDIR}
   COMPONENT sample_exe)
 
-install(
-  TARGETS sample_exe
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-  PRIVATE_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/sample_lib)
+install(TARGETS sample_exe DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 # NOTE: please configure to install better docs
 install(
@@ -52,4 +49,4 @@ write_basic_package_version_file(
 
 install(FILES ${PROJECT_BINARY_DIR}/SampleLibConfig.cmake
               ${PROJECT_BINARY_DIR}/SampleLibConfigVersion.cmake
-              DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/sample_lib)
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/sample_lib)
