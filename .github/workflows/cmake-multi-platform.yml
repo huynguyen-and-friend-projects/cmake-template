@@ -92,7 +92,10 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.build-output-dir }}/conan_toolchain.cmake
         -S ${{ github.workspace }}
 
-      # NOTE: this action doesn't check if Conan is properly working
+    - name: Configure CMake through Makefile
+      run: |
+        cd ${{ github.workspace }}
+        make generate
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
