@@ -85,7 +85,7 @@ jobs:
     - name: Export toolchain position as variable (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        $toolchain=Get-ChildItem -Path ${{ github.workspace }} -Recurse -Include conan_toolchain.cmake -Name | Select-Object -First 1
+        $toolchain=Get-ChildItem -Path ${{ steps.strings.outputs.build-optput-dir }} -Recurse -Include conan_toolchain.cmake -Name | Select-Object -First 1
 
     - name: Configure CMake (Windows)
       if: matrix.os == 'windows-latest'
