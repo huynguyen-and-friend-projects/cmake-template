@@ -32,18 +32,46 @@
 - [The main CMakeLists](./CMakeLists.txt):
   - At the very least, change the `project` configurations.
 
-- Anything in the [source directory](./src/) and [test directory](./test/), obviously.
+- Anything in the [source directory](./src/) and [test directory](./test/), obviously:
+  - If you ever fear that your changes break things, remember to set up a Git
+  repo and push the unmodified template up there first.
+
+- The [module files](./cmake). Optional but recommened:
+  - Recommended changing their names to `<YOUR_PROJECT_NAME><ORIGINAL_MODULE_NAME>`
+  to avoid potential module name conflicts with external projects.
+  - After changing their names, be sure to check all other CMake files and include
+  the appropriate modules.
 
 - The [installation config CMake module](./cmake/InstallConfigurations.cmake):
   - If you don't need a convenient installation for others to use, simply remove
   the `include(InstallConfigurations)` at the bottom of [the src CMakeLists](./src/CMakeLists.txt)
+  - Write and install more proper documentation than whatever this is.
+
+- The [license](./LICENSE).
+  - If you wish to keep using the MIT license, simply change the copyright
+  author name.
+
+- The [conanfile.py](./conanfile.py).
+  - Change the class name.
+  - Add/remove packages.
+  - Of course, if you don't use Conan, you can just delete it, alongside the
+  convenient `conan-*` commands and `CONAN_*` variables in [the Makefile](./Makefile).
+  - If you want the CMake-like layout, add the following inside the class:
+
+  ```python
+  def layout(self):
+    cmake_layout(self)
+  ```
+
+  - Then, inside the [Makefile](./Makefile), in the `conan-install` target, remove
+  `--output-dir=$(BUILD_DIR)`
 
 - The man page:
   - `@SAMPLE_LIB_MAN_HELP@` and `@SAMPLE_LIB_LICENSE@` are defined in the
   [installtion CMake module](./cmake/InstallConfigurations.cmake). `@SAMPLE_LIB_HELP_STRING@`
   is in [source CMakeLists](./src/CMakeLists.txt)
-  - `@SAMPLE_LIB_LICENSE@` simply reads content of the license and
-  remove the license header (in this case, "MIT License\n\n")
+  - `@SAMPLE_LIB_LICENSE@` simply reads content of [the license](./LICENSE) and
+  remove the license header (in this case, "MIT License\n\n").
   - If you don't wish to have a man page, simply remove the
   `configure_file` and `install` of the man page in
   [installtion CMake module](./cmake/InstallConfigurations.cmake)
@@ -76,6 +104,9 @@
 
 ## Other
 
+- Q: Not a good experience with MSVC
+- A: Expected. The author doesn't do much testing with MSVC.
+
 - Q: How to configure options with `cmake` command?
 - A: Pass each of them in as `-D${OPTION NAME}=${VALUE}`
 
@@ -88,6 +119,13 @@
 
 - Q: How about Catch instead of Google Test?
 - A: You're on your own. But here's [the Catch2 documentation for CMake](https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md#top).
+
+- Q: SDL2, Raylib, OpenCV and so on.
+- A: Either write it yourself, or simply download with Conan if possible.
+  - After downloading with Conan, call `find_package(PACKAGE_NAME)`.
+  - If you write your own, take a look at the [FetchGTest.cmake file](./cmake/FetchGTest.cmake).
+    - You can also use `ExternalProject` CMake module if the project doesn't
+    build very well with `FetchContent`.
 
 - Q: How to use Conan?
 - A: You can use the premade Makefile:
