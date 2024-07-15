@@ -37,3 +37,6 @@ class SampleLibRecipe(ConanFile):
 
         if self.options.install_ccache:
             self.tool_requires("ccache/4.10")
+
+        if self.options.install_make:
+            self.tool_requires("make/4.4.1")
