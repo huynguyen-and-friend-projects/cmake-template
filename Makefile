@@ -7,7 +7,6 @@
 override MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 override MAKEFILE_DIR := $(patsubst %/Makefile,%,$(MAKEFILE_PATH))
 override BUILD_DIR := $(MAKEFILE_DIR)/build
-CONAN_OPTIONS := install_cmake=False
 BUILD_TYPE := Debug
 CONAN_OPTIONS := "install_cmake=False install_ccache=False"
 override CONAN_OPTIONS_CMDLINE := $(foreach opt,$(CONAN_OPTIONS),$(patsubst %,-o options/all:%,$(opt)))
