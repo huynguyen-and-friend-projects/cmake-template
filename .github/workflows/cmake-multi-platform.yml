@@ -82,6 +82,11 @@ jobs:
     - name: Test virtual environment
       run: make --version
 
+    - name: Export toolchain position as variable (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        $toolchain=Get-ChildItem -Path ${{ github.workspace }} -Recurse -Include conan_toolchain.cmake -Name | Select-Object -First 1
+
     - name: Configure CMake (Windows)
       if: matrix.os == 'windows-latest'
       run: >
@@ -90,7 +95,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DENABLE_UNIT_TEST=ON
-        -DCMAKE_TOOLCHAIN_FILE=$(Get-ChildItem -Path ${{ github.workspace }} -Recurse -Include conan_toolchain.cmake -Name | Select-Object -First 1)
+        -DCMAKE_TOOLCHAIN_FILE="$toolchain"
         -S ${{ github.workspace }}
 
     - name: Configure CMake (Linux)
