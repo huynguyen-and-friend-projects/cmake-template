@@ -18,3 +18,4 @@ include(CMakeOptions)
 install(TARGETS project_options DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 add_subdirectory(src)
+include(CPackConfigurations)
