@@ -20,9 +20,40 @@
 - Some integration with ccache (universal).
 - Some integration with lld, libASan, libUBSan and libMSan (gcc/clang only).
 - Automatically configure and generate a pkg-config entry.
+- Automatically configure and generate a man entry.
+- Automatically configure and generate config and version config files for installation.
+- Packing with CPack.
 - Unit testing with Google Test.
 - Download dependencies with Conan.
 - Predefined convenient commands in [the Makefile](./Makefile)
+
+## What to change
+
+- [The main CMakeLists](./CMakeLists.txt):
+  - At the very least, change the `project` configurations.
+
+- Anything in the [source directory](./src/) and [test directory](./test/), obviously.
+
+- The [installation config CMake module](./cmake/InstallConfigurations.cmake):
+  - If you don't need a convenient installation for others to use, simply remove
+  the `include(InstallConfigurations)` at the bottom of [the src CMakeLists](./src/CMakeLists.txt)
+
+- The man page:
+  - `@SAMPLE_LIB_MAN_HELP@` and `@SAMPLE_LIB_LICENSE@` are defined in the
+  [installtion CMake module](./cmake/InstallConfigurations.cmake). `@SAMPLE_LIB_HELP_STRING@`
+  is in [source CMakeLists](./src/CMakeLists.txt)
+  - `@SAMPLE_LIB_LICENSE@` simply reads content of the license and
+  remove the license header (in this case, "MIT License\n\n")
+  - If you don't wish to have a man page, simply remove the
+  `configure_file` and `install` of the man page in
+  [installtion CMake module](./cmake/InstallConfigurations.cmake)
+
+- Configuration option ([at cmake/ConfigureOptions](./cmake/ConfigureOptions.cmake)
+[and CMakeOptions](./CMakeOptions.cmake)). Optional.
+  - If you add/remove options in [CMakeOptions](./CMakeOptions.cmake), be sure to
+  remove the matching configuration inside [cmake/ConfigureOptions](./cmake/ConfigureOptions.cmake)
+
+- Add more options for [the Makefile](./Makefile). Optional.
 
 ## Options
 
