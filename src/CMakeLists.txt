@@ -21,9 +21,9 @@ target_include_directories(
           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/sample_lib>)
 
 set(SAMPLE_LIB_HELP_STRING
-    "List of options:\\n\"
+    "\"List of options:\\n\"
     \"\t-h|--help: Prints this list of options\\n\"
-    \"\t-ln|--lucky-number: Prints the lucky number\\n")
+    \"\t-ln|--lucky-number: Prints the lucky number\\n\"")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/internal/sample_lib_exe_.hxx.in
                ${PROJECT_BINARY_DIR}/src/internal/sample_lib_exe_.hxx @ONLY)
 

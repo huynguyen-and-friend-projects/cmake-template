@@ -20,6 +20,7 @@ install(
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
   COMPONENT sample_lib)
 
+string(REGEX REPLACE "(\"|\\n\"|\\\\)" "" SAMPLE_LIB_MAN_HELP ${SAMPLE_LIB_HELP_STRING})
 configure_file(${PROJECT_SOURCE_DIR}/sample_lib.1.in
                ${PROJECT_BINARY_DIR}/sample_lib.1)
 install(

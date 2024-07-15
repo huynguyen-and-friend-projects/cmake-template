@@ -3,6 +3,6 @@
 
 #include <string_view>
 
-constexpr std::string_view help_str = "@SAMPLE_LIB_HELP_STRING@"; // NOLINT
+constexpr std::string_view help_str = @SAMPLE_LIB_HELP_STRING@; // NOLINT
 
 #endif // !SAMPLE_LIB_EXE_HXX

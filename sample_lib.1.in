@@ -2,7 +2,7 @@ NAME
     sample_lib v.@PROJECT_VERSION@ - Toy CMake configurations 
 SYNOPSIS
     Note: this looks bad because I lazily let CMake generate it
-    @SAMPLE_LIB_HELP_STRING@
+    @SAMPLE_LIB_MAN_HELP@
 DESCRIPTION
     A byproduct of the CMake template
 EXAMPLES
