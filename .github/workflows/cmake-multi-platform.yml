@@ -72,7 +72,7 @@ jobs:
       if: matrix.os == 'windows-latest'
       run: |
         cd ${{ steps.strings.outputs.build-output-dir }}
-        .\conanbuild.ps1
+        & .\conanbuild.bat
 
     - name: Activate Conan environment (Linux)
       if: matrix.os == 'ubuntu-latest'
