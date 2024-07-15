@@ -67,6 +67,7 @@ jobs:
         --settings=build_type=${{ matrix.build_type }}
         -o options/all:install_ccache=True
         -o options/all:install_make=True
+        -o options/all:install_ninja=True
 
     - name: Activate Conan environment (Windows)
       if: matrix.os == 'windows-latest'
