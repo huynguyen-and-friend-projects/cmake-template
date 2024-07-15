@@ -62,7 +62,7 @@ jobs:
     - name: Install Conan packages
       run: >
         conan install .
-        --output-folder=${{ steps.strings.output.build-output-dir }}
+        --output-folder=${{ steps.strings.outputs.build-output-dir }}
         --build=missing
         --settings=build_type=${{ matrix.build_type }}
         -o options/all:install_ccache=True
