@@ -62,23 +62,27 @@ jobs:
     - name: Install Conan packages
       run: >
         conan install .
-        --output-folder=${{ steps.strings.output.build-output-dir }}
+        --output-folder=${{ steps.strings.outputs.build-output-dir }}
         --build=missing
         --settings=build_type=${{ matrix.build_type }}
         -o options/all:install_ccache=True
         -o options/all:install_make=True
+        -o options/all:install_ninja=True
 
     - name: Activate Conan environment (Windows)
       if: matrix.os == 'windows-latest'
       run: |
         cd ${{ steps.strings.outputs.build-output-dir }}
-        conanbuild.bat
+        & .\conanbuild.bat
 
     - name: Activate Conan environment (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{ steps.strings.outputs.build-output-dir }}
         source conanbuild.sh
+
+    - name: Test virtual environment
+      run: make --version
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -91,8 +95,6 @@ jobs:
         -DENABLE_UNIT_TEST=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.build-output-dir }}/conan_toolchain.cmake
         -S ${{ github.workspace }}
-
-      # NOTE: this action doesn't check if Conan is properly working
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
