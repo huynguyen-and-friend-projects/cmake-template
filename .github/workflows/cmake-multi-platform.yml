@@ -101,7 +101,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DENABLE_UNIT_TEST=ON
-        -DCMAKE_TOOLCHAIN_FILE=$(find ${{ github.workspace }} -name "conan_toolchain.cmake" | head -1)
+        -DCMAKE_TOOLCHAIN_FILE="$(find ${{ github.workspace }} -name "conan_toolchain.cmake" | head -1)"
         -S ${{ github.workspace }}
 
     - name: Build
