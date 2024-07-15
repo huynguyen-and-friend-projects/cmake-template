@@ -1,5 +1,3 @@
-include(GenerateExportHeader)
-
 # List the source files for the library here, after STATIC
 add_library(sample_lib sample_lib.cxx sample_lib_internal.cxx)
 add_library(sample_lib::main_lib ALIAS sample_lib)
