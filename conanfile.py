@@ -40,3 +40,6 @@ class SampleLibRecipe(ConanFile):
 
         if self.options.install_make:
             self.tool_requires("make/4.4.1")
+
+    def layout(self):
+        cmake_layout(self)

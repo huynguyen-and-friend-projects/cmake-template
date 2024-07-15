@@ -62,7 +62,6 @@ jobs:
     - name: Install Conan packages
       run: >
         conan install .
-        --output-folder=${{ steps.strings.outputs.build-output-dir }}
         --build=missing
         --settings=build_type=${{ matrix.build_type }}
         -o options/all:install_ccache=True
@@ -72,36 +71,44 @@ jobs:
     - name: Activate Conan environment (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}
-        & .\conanbuild.bat
+        & 'Get-ChildItem -Path . -Recurse -Include conanbuild.*,deactivate_conanbuild.* -Name | Select-Object -First 1'
 
     - name: Activate Conan environment (Linux)
       if: matrix.os == 'ubuntu-latest'
       run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}
-        source conanbuild.sh
+        source `find ${{ github.workspace }} -name "conanbuild.*" | head -1`
 
     - name: Test virtual environment
       run: make --version
 
-    - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+    - name: Configure CMake (Windows)
+      if: matrix.os == 'windows-latest'
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}
         -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -DENABLE_UNIT_TEST=ON
-        -DCMAKE_TOOLCHAIN_FILE=${{ steps.strings.outputs.build-output-dir }}/conan_toolchain.cmake
+        -DCMAKE_TOOLCHAIN_FILE=$(Get-ChildItem -Path ${{ github.workspace }} -Recurse -Include conan_toolchain.cmake -Name | Select-Object -First 1)
+        -S ${{ github.workspace }}
+
+    - name: Configure CMake (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: >
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -DENABLE_UNIT_TEST=ON
+        -DCMAKE_TOOLCHAIN_FILE=$(find ${{ github.workspace }} -name "conan_toolchain.cmake" | head -1)
         -S ${{ github.workspace }}
 
     - name: Build
       # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }} --config ${{ matrix.build_type }}
 
     - name: Test
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}/test
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}/${{ matrix.build_type }}/test
       # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
