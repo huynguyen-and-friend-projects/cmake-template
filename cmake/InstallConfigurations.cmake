@@ -1,5 +1,3 @@
-# WARNING: calling "install" with ENABLE_TESTING will install the entire GTest
-# suite also
 include(GNUInstallDirs)
 
 install(
@@ -20,15 +18,11 @@ install(
 
 configure_file(${PROJECT_SOURCE_DIR}/sample_lib.1.in
                ${PROJECT_BINARY_DIR}/sample_lib.1.in)
-install(FILES ${PROJECT_BINARY_DIR}/sample_lib.1.in
-        DESTINATION ${CMAKE_INSTALL_MANDIR}
-        COMPONENT sample_exe)
-
 install(
-  FILES ${PROJECT_SOURCE_DIR}/cmake/sample_lib-config.cmake
-        ${PROJECT_SOURCE_DIR}/cmake/sample_lib-config-version.cmake
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/sample_lib
-  COMPONENT sample_lib)
+  FILES ${PROJECT_BINARY_DIR}/sample_lib.1.in
+  DESTINATION ${CMAKE_INSTALL_MANDIR}
+  COMPONENT sample_exe)
+
 install(
   TARGETS sample_exe
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -39,3 +33,19 @@ install(
   FILES ${PROJECT_SOURCE_DIR}/README.md
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   COMPONENT sample_lib_doc)
+
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(
+  ${PROJECT_SOURCE_DIR}/cmake/SampleLibConfig.cmake.in
+  ${PROJECT_BINARY_DIR}/SampleLibConfig.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/sample_lib)
+
+write_basic_package_version_file(
+  "${PROJECT_BINARY_DIR}/SampleLibConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion)
+
+install(FILES ${PROJECT_BINARY_DIR}/SampleLibConfig.cmake
+              ${PROJECT_BINARY_DIR}/SampleLibConfigVersion.cmake
+              DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/cmake/sample_lib)
