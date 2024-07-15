@@ -3,7 +3,8 @@ project(
   my_proj
   LANGUAGES CXX
   VERSION 0.69.420
-  DESCRIPTION "Toy project")
+  DESCRIPTION "Toy project"
+  HOMEPAGE_URL "https://github.com/huynguyen-and-friend-projects/cmake-template")
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

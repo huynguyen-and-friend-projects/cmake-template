@@ -9,7 +9,6 @@ override MAKEFILE_DIR := $(patsubst %/Makefile,%,$(MAKEFILE_PATH))
 override BUILD_DIR := $(MAKEFILE_DIR)/build
 CONAN_OPTIONS := install_cmake=False
 BUILD_TYPE := Debug
-GENERATOR := "Ninja"
 CONAN_OPTIONS := "install_cmake=False install_ccache=False"
 override CONAN_OPTIONS_CMDLINE := $(foreach opt,$(CONAN_OPTIONS),$(patsubst %,-o options/all:%,$(opt)))
 
@@ -57,7 +56,7 @@ generate:
 		-DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
 		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
 		-DCMAKE_TOOLCHAIN_FILE=$(BUILD_DIR)/conan_toolchain.cmake \
-		-G $(GENERATOR) -B $(BUILD_DIR)
+		-B $(BUILD_DIR) -S $(MAKEFILE_DIR)
 
 # further configure CMake options
 .PHONY: configure
@@ -70,7 +69,7 @@ build:
 
 .PHONY: test
 test:
-	@cmake --build $(BUILD_DIR) --target test-all
+	@ctest --test-dir $(BUILD_DIR)/test
 
 .PHONY: install
 install:
