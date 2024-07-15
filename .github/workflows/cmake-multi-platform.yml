@@ -71,7 +71,8 @@ jobs:
     - name: Activate Conan environment (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        & 'Get-ChildItem -Path . -Recurse -Include conanbuild.*,deactivate_conanbuild.* -Name | Select-Object -First 1'
+        $conanbuild=Get-ChildItem -Path . -Recurse -Include conanbuild.* -Name | Select-Object -First 1
+        & $conanbuild
 
     - name: Activate Conan environment (Linux)
       if: matrix.os == 'ubuntu-latest'
