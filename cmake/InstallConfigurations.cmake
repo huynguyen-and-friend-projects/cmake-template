@@ -23,7 +23,7 @@ install(
 configure_file(${PROJECT_SOURCE_DIR}/sample_lib.1.in
                ${PROJECT_BINARY_DIR}/sample_lib.1)
 install(
-  FILES ${PROJECT_BINARY_DIR}/sample_lib.1.in
+  FILES ${PROJECT_BINARY_DIR}/sample_lib.1
   DESTINATION ${CMAKE_INSTALL_MANDIR}
   COMPONENT sample_exe)
 
