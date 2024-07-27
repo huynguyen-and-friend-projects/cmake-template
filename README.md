@@ -50,7 +50,7 @@ cmake -B <your build dir> --preset conan-debug \
   #!/bin/sh
 
   for cmake_file in `find . -name '*.cmake' -or -name 'CMakeLists.txt'`; do
-    sed "s/myproj/<your project name>/g"
+    sed -i "s/myproj/<your project name>/g" $cmake_file
   done
   ```
 
