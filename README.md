@@ -63,5 +63,4 @@ cmake -B <your build dir> --preset conan-debug \
 
 ## Coming soon
 
-- Enable coverage
 - Google benchmark integration
