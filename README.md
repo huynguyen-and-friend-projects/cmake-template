@@ -1,159 +1,67 @@
-# Cmake-template
+# Cmake template (2.0)
+
+> A rewrite of this CMake template, trimming away some "bloat"
 
 ## What's this
 
-- A rather minimal CMake template project that you can use for your C or C++ project.
+- A somewhat minimalist CMake project configuration.
 
-## Dependencies
+## What's included
 
-> [!NOTE]
-> You can actually get away without anything but Conan and Make installed.
+- Integration with multiple tools:
+  - Formatters & linters:
+    - clang-format
+    - clang-tidy
+    - cmake-format
+  - Unit test (GTest), fuzz test (libFuzzer)
+  - Sanitizers (ASan, UBSan, MSan, TSan)
+  - Download dependencies with conan
+  - ccache
+  - lld
+- Convenient commands in [the Makefile](./Makefile)
+- Basic CPack configuration
 
-- CMake (obviously)
-- Make (optional, mainly for the convenience [Makefile](./Makefile))
-- Ninja (default generator)
-- ccmake (for the configured `make configure` convenience command to work)
-- Conan (optional, but heavily recommended, for easy package managing)
+## How to use
 
-## "Features"
+- If you want to use conan, first, set up conan [by Reading The Friendly Manual](https://docs.conan.io/2/installation.html):
+- Then install packages,
 
-- Some integration with ccache (universal).
-- Some integration with lld, libASan, libUBSan and libMSan (gcc/clang only).
-- Automatically configure and generate a pkg-config entry.
-- Automatically configure and generate a man entry.
-- Automatically configure and generate config and version config files for installation.
-- Packing with CPack.
-- Unit testing with Google Test.
-- Download dependencies with Conan.
-- Predefined convenient commands in [the Makefile](./Makefile)
+```bash
+conan install <project source dir> --build=missing -s build_type=<your build type>
+```
+
+- Then generate the CMake
+
+```bash
+# --preset conan-release if building release
+cmake -B <your build dir> --preset conan-debug \
+    -DCMAKE_CXX_COMPILER=<the compiler> \
+    -DCMAKE_C_COMPILER=<the compiler> \
+    -G <generator> \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+```
 
 ## What to change
 
-- [The main CMakeLists](./CMakeLists.txt):
-  - At the very least, change the `project` configurations.
+- At the very least, the project name.
+  - If you know how to use `sed`, this is extremely easy:
 
-- Anything in the [source directory](./src/) and [test directory](./test/), obviously:
-  - If you ever fear that your changes break things, remember to set up a Git
-  repo and push the unmodified template up there first.
+  ```sh
+  #!/bin/sh
 
-- The [module files](./cmake). Optional but recommened:
-  - Recommended changing their names to `<YOUR_PROJECT_NAME><ORIGINAL_MODULE_NAME>`
-  to avoid potential module name conflicts with external projects.
-  - After changing their names, be sure to check all other CMake files and include
-  the appropriate modules.
-
-- The [installation config CMake module](./cmake/InstallConfigurations.cmake):
-  - If you don't need a convenient installation for others to use, simply remove
-  the `include(InstallConfigurations)` at the bottom of [the src CMakeLists](./src/CMakeLists.txt)
-  - Write and install more proper documentation than whatever this is.
-
-- The [license](./LICENSE).
-  - If you wish to keep using the MIT license, simply change the copyright
-  author name.
-
-- The [conanfile.py](./conanfile.py).
-  - Change the class name.
-  - Add/remove packages.
-  - Of course, if you don't use Conan, you can just delete it, alongside the
-  convenient `conan-*` commands and `CONAN_*` variables in [the Makefile](./Makefile).
-  - If you want the CMake-like layout, add the following inside the class:
-
-  ```python
-  def layout(self):
-    cmake_layout(self)
+  for cmake_file in `find . -name '*.cmake' -or -name 'CMakeLists.txt'`; do
+    sed "s/myproj/<your project name>/g"
+  done
   ```
 
-  - Then, inside the [Makefile](./Makefile), in the `conan-install` target, remove
-  `--output-dir=$(BUILD_DIR)`
+- If this is a top-level project, and you want these features:
+  - [The install configuration](./cmake/InstallConfig.cmake)
+  - [The packing configuration](./cmake/PackConfig.cmake)
 
-- The man page:
-  - `@SAMPLE_LIB_MAN_HELP@` and `@SAMPLE_LIB_LICENSE@` are defined in the
-  [installtion CMake module](./cmake/InstallConfigurations.cmake). `@SAMPLE_LIB_HELP_STRING@`
-  is in [source CMakeLists](./src/CMakeLists.txt)
-  - `@SAMPLE_LIB_LICENSE@` simply reads content of [the license](./LICENSE) and
-  remove the license header (in this case, "MIT License\n\n").
-  - If you don't wish to have a man page, simply remove the
-  `configure_file` and `install` of the man page in
-  [installtion CMake module](./cmake/InstallConfigurations.cmake)
+- If you use other dependencies:
+  - [The conanfile](./conanfile.py)
 
-- Configuration option ([at cmake/ConfigureOptions](./cmake/ConfigureOptions.cmake)
-[and CMakeOptions](./CMakeOptions.cmake)). Optional.
-  - If you add/remove options in [CMakeOptions](./CMakeOptions.cmake), be sure to
-  remove the matching configuration inside [cmake/ConfigureOptions](./cmake/ConfigureOptions.cmake)
+## Coming soon
 
-- Add more options for [the Makefile](./Makefile). Optional.
-
-## Options
-
-> [!NOTE]
-> Use `ccmake` or `cmake`-gui to more easily configure options
-
-- Options and their defaults are defined in [CMakeOptions.cmake](./CMakeOptions.cmake).
-
-- Extra notes for options:
-  - Only turn on at max one of `ENABLE_ASAN`, `ENABLE_UBSAN`, or `ENABLE_MSAN`.
-  - For `ccache` and `lld` options (`ENABLE_CCACHE` and `ENABLE_LLD` respectively),
-  make sure these programs are installed on your machine, and is included in `PATH`.
-  - There is a high chance `lld` doesn't work with `MSVC`, so it's currently just
-  turned off for `MSVC`.
-  - If you're debugging heavily templated code, turning off optimizations
-  (`ENABLE_OPTIMIZATION=OFF`) is recommended.
-  - If you're installing your library, please:
-    1. Turn off testing (`ENABLE_TESTING=OFF`).
-    2. Use some kind of Release mode (for obvious reasons).
-
-## Other
-
-- Q: Not a good experience with MSVC
-- A: Expected. The author doesn't do much testing with MSVC.
-
-- Q: How to configure options with `cmake` command?
-- A: Pass each of them in as `-D${OPTION NAME}=${VALUE}`
-
-- Q: The text editor keeps giving red squiggles.
-- A: Try generate with `CMAKE_EXPORT_COMPILE_COMMANDS=ON`.
-  - `ccmake`: Turn on advanced options and look for `CMAKE_EXPORT_COMPILE_COMMANDS`.
-  - `cmake`: Pass in `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`.
-  - NOTE: VS Code's CMake extension is somewhat stupid, so,
-  use either of the listed two methods for consistent results.
-
-- Q: How about Catch instead of Google Test?
-- A: You're on your own. But here's [the Catch2 documentation for CMake](https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md#top).
-
-- Q: SDL2, Raylib, OpenCV and so on.
-- A: Either write it yourself, or simply download with Conan if possible.
-  - After downloading with Conan, call `find_package(PACKAGE_NAME)`.
-  - If you write your own, take a look at the [FetchGTest.cmake file](./cmake/FetchGTest.cmake).
-    - You can also use `ExternalProject` CMake module if the project doesn't
-    build very well with `FetchContent`.
-
-- Q: How to use Conan?
-- A: You can use the premade Makefile:
-  - `make conan-install [CONAN_OPTIONS="[LIST OF OPTIONS]"]`
-    - View options and their defaults with the command `make conan-option`
-    - Check which packages of which versions are installed in [conanfile.py](./conanfile.py)
-    - Example: `CONAN_OPTIONS="install_cmake=False install_ninja=True install_ccache=False"`
-  - After that, run the newly symlinked file.
-
-- Q: How to use a different generator?
-- A: Say, you want to use Ninja.
-  1. Delete the file `${YOUR BUILD DIR}/CMakeCache.txt`.
-  2. If you use `ccmake`: `ccmake -B ${YOUR BUILD DIR} -G Ninja`.
-  3. If you use `cmake`: `cmake -G Ninja -B ${YOUR BUILD DIR} ${ALL OTHER OPTIONS}`.
-
-- Q: How to use a different compiler?
-- A: Say, you want to use clang.
-  1. Delete the file `${YOUR BUILD DIR}/CMakeCache.txt`.
-  2. If you use `ccmake`:
-  `ccmake -B ${YOUR BUILD DIR} -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang`.
-  3. If you use `cmake`:
-  `cmake -B ${YOUR BUILD DIR}
-  -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ${ALL OTHER OPTIONS}`.
-
-- Q: Not liking CMake.
-- A: Same :sob:.
-
-## To-do
-
-- Document the options inside the [Makefile](./Makefile)
-  - For now, you need to read through the Makefile a little bit.
+- Enable coverage
+- Google benchmark integration

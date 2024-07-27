@@ -23,9 +23,8 @@ endif
 # install packages as configured in conanfile.py
 .PHONY: conan-install
 conan-install:
-	mkdir -p $(BUILD_DIR)/${CMAKE_BUILD_TYPE}
 	conan install . --build=missing \
-		--settings=build_type=${CMAKE_BUILD_TYPE} \
+		--s build_type=${CMAKE_BUILD_TYPE} \
 		$(CONAN_OPTIONS_CMDLINE)
 	@make conan-venv-help
 
@@ -38,7 +37,7 @@ conan-option:
 	@cat conanfile.py | \
 		tr '\n' ' ' | \
 		grep -E -o "(default_)?options = {.*}" | \
-  	sed -E "s/[ ]{2,}/\\n/g" | \
+	sed -E "s/[ ]{2,}/\\n/g" | \
 		sed -E "s/(.*):/\t\1:/g"
 	@printf "$(COLOUR_AND_STYLE_RESET)"
 	@echo
@@ -51,30 +50,3 @@ $(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(MAKEFILE_DIR) -name "cona
 	@printf "$(COLOUR_GREEN)To deactivate Conan's environment, run the script\
 $(COLOUR_AND_STYLE_RESET): $(STYLE_BOLD)$(shell find $(MAKEFILE_DIR) -name "deactivate_conanbuild.*")\n$(COLOUR_AND_STYLE_RESET)"
 	@echo
-
-# Generate CMake with some defaults
-.PHONY: generate
-generate:
-	@mkdir -p $(BUILD_DIR)/${CMAKE_BUILD_TYPE}
-	cmake	-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} \
-		-DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
-		-DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-		-DCMAKE_TOOLCHAIN_FILE=$(shell find $(MAKEFILE_DIR) -name "conan_toolchain.cmake") \
-		-B $(BUILD_DIR)/${CMAKE_BUILD_TYPE} -S $(MAKEFILE_DIR)
-
-# further configure CMake options
-.PHONY: configure
-configure: generate
-	@ccmake -B $(BUILD_DIR)/${CMAKE_BUILD_TYPE} .
-
-.PHONY: build
-build:
-	@cmake --build $(BUILD_DIR)/${CMAKE_BUILD_TYPE}
-
-.PHONY: test
-test:
-	@ctest --test-dir $(BUILD_DIR)/${CMAKE_BUILD_TYPE}/test
-
-.PHONY: install
-install:
-	@cmake --install $(BUILD_DIR)/${CMAKE_BUILD_TYPE}

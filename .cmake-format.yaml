@@ -49,7 +49,7 @@ markup:
 lint:
   disabled_codes: []
   function_pattern: '[0-9a-z_]+'
-  macro_pattern: '[0-9A-Z_]+'
+  macro_pattern: '[0-9a-z_]+'
   global_var_pattern: '[A-Z]?[a-z]?[0-9A-Z_]?+[0-9a-z]?+'
   internal_var_pattern: _[A-Z][0-9A-Z_]+
   local_var_pattern: '[a-z][a-z0-9_]+'
