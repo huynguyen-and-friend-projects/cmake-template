@@ -23,6 +23,32 @@ macro(myproj_local_config)
         endif()
     endif()
 
+    if(myproj_ENABLE_COVERAGE)
+        if(MSVC)
+            target_compile_options(myproj_compile_opts
+                                   INTERFACE "/fsanitize-coverage")
+        else()
+            if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+                target_compile_options(myproj_compile_opts
+                                       INTERFACE "--coverage;-ftest-coverage")
+                target_link_libraries(
+                    myproj_compile_opts
+                    INTERFACE "-fprofile-arcs;-ftest-coverage")
+            elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL ".*Clang")
+                target_compile_options(
+                    myproj_compile_opts
+                    INTERFACE
+                        "-fprofile-instr-generate;-fcoverage-mapping;-mllvm;-runtime-counter-relocation"
+                )
+                target_link_libraries(
+                    myproj_compile_opts
+                    INTERFACE
+                        "-fprofile-instr-generate;-fcoverage-mapping;-mllvm;-runtime-counter-relocation"
+                )
+            endif()
+        endif()
+    endif()
+
     include(cmake/CheckSanitizerSourceCompile.cmake)
     if(myproj_ENABLE_ASAN
        OR myproj_ENABLE_UBSAN
@@ -70,7 +96,8 @@ macro(myproj_local_config)
     endif()
 
     if(myproj_ENABLE_TSAN AND myproj_TSAN_COMPILE)
-        target_compile_options(myproj_compile_opts INTERFACE "-fsanitize=thread")
+        target_compile_options(myproj_compile_opts
+                               INTERFACE "-fsanitize=thread")
         target_link_libraries(myproj_compile_opts INTERFACE "-fsanitize=thread")
     endif()
 

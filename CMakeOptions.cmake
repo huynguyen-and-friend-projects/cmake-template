@@ -33,6 +33,7 @@ cmake_dependent_option(
 # Setup for this project only
 # ##############################################################################
 
+option(myproj_ENABLE_COVERAGE "Add coverage flags" OFF)
 option(myproj_ENABLE_PCH "Use precompiled headers" OFF)
 # in my experience, turning this off gives better debug information
 cmake_dependent_option(
@@ -62,12 +63,13 @@ if(NOT PROJECT_IS_TOP_LEVEL)
         myproj_ENABLE_CCACHE
         myproj_ENABLE_LLD
         myproj_ENABLE_LTO
-        myproj_ENABLE_PCH
         myproj_ENABLE_WARNING
         myproj_WARNING_AS_ERR
         myproj_ENABLE_UNIT_TEST
         myproj_ENABLE_FUZZ_TEST
         myproj_ENABLE_OPTIMIZATION
+        myproj_ENABLE_COVERAGE
+        myproj_ENABLE_PCH
         myproj_ENABLE_ASAN
         myproj_ENABLE_UBSAN
         myproj_ENABLE_MSAN
