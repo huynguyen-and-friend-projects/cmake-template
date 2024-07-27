@@ -66,6 +66,10 @@ macro(myproj_local_config)
         if(MSVC)
             target_compile_options(myproj_compile_opts
                                    INTERFACE "/fsanitize=address")
+            target_compile_definitions(
+                myproj_compile_opts
+                INTERFACE
+                    "/D_DISABLE_STRING_ANNOTATION;/D_DISABLE_VECTOR_ANNOTATION")
             target_link_libraries(myproj_compile_opts
                                   INTERFACE "/fsanitize=address")
         else()
@@ -105,8 +109,10 @@ macro(myproj_local_config)
         include(cmake/CheckLibcxxSourceCompile.cmake)
         myproj_check_libcxx_compile(myproj_LIBCXX_COMPILE)
         if(myproj_LIBCXX_COMPILE)
-            target_compile_options(myproj_compile_opts INTERFACE "-stdlib=libc++")
-            target_link_libraries(myproj_compile_opts INTERFACE "-stdlib=libc++")
+            target_compile_options(myproj_compile_opts
+                                   INTERFACE "-stdlib=libc++")
+            target_link_libraries(myproj_compile_opts
+                                  INTERFACE "-stdlib=libc++")
         endif()
     endif()
 
