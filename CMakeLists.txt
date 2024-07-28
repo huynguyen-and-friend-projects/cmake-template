@@ -48,6 +48,7 @@ if(myproj_PACK)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(submodule)
 
 if(myproj_ENABLE_UNIT_TEST)
     message(STATUS "Unit test enabled")
