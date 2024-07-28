@@ -6,6 +6,11 @@
 
 - A somewhat minimalist CMake project configuration.
 
+## Disclaimer
+
+- Limited testing was done for MSVC (Visual Studio). While it is expected that
+this works out of the box for Visual Studio, in reality, it may not be so simple.
+
 ## What's included
 
 - Integration with multiple tools:
