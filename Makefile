@@ -24,7 +24,7 @@ endif
 .PHONY: conan-install
 conan-install:
 	conan install . --build=missing \
-		--s build_type=${CMAKE_BUILD_TYPE} \
+		-s build_type=${CMAKE_BUILD_TYPE} \
 		$(CONAN_OPTIONS_CMDLINE)
 	@make conan-venv-help
 
