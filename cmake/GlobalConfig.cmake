@@ -50,6 +50,14 @@ macro(myproj_global_config)
         endif()
     endif()
 
+    if(myproj_ENABLE_MODULE)
+        if(MSVC)
+            add_compile_definitions("/DENABLE_MODULE")
+        else()
+            add_compile_definitions("-DENABLE_MODULE")
+        endif()
+    endif()
+
     # libc++
     if(myproj_USE_LIBCXX)
         include(cmake/CheckLibcxxSourceCompile.cmake)

@@ -24,6 +24,9 @@ endif()
 option(myproj_ENABLE_CCACHE "Use ccache" OFF)
 option(myproj_ENABLE_LLD "Use lld instead of the compiler-default linker" OFF)
 option(myproj_ENABLE_LTO "Enable link-time optimization" OFF)
+cmake_dependent_option(
+    myproj_ENABLE_MODULE "Enable modules. Require C++20 and above" OFF
+    "${CMAKE_CXX_STANDARD} GREATER_EQUAL 20" OFF)
 option(myproj_ENABLE_WARNING "Turn on compiler warnings." ON)
 cmake_dependent_option(
     myproj_WARNING_AS_ERR "Turn compiler warnings into errors" OFF
