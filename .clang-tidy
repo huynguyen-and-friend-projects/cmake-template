@@ -15,6 +15,6 @@ ImplementationFileExtensions:
 HeaderFilterRegex: ''
 CheckOptions:
   - key: readability-identifier-length.IgnoredVariableNames
-    value: 'i|j|k|p'
+    value: '_|i|j|k|p'
   - key: readability-identifier-length.IgnoredParameterNames
-    value: 'i|j|k|p'
+    value: '_|i|j|k|p'
