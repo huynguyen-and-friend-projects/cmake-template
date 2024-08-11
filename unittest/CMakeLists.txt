@@ -1,4 +1,5 @@
 # CMake's default GTest finding
+enable_testing()
 include(GoogleTest)
 find_package(GTest REQUIRED)
 
