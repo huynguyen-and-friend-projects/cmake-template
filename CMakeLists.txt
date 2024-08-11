@@ -2,6 +2,7 @@
 # myproj top level CMakeLists
 # ##############################################################################
 
+# module support starts at 3.28
 cmake_minimum_required(VERSION 3.28)
 project(
     myproj
@@ -28,6 +29,9 @@ message(STATUS "Turn off ${CMAKE_CXX_COMPILER_ID} extensions")
 message(STATUS "Turn off ${CMAKE_C_COMPILER_ID} extensions")
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
+# hide as much as I can
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 
 add_library(myproj_compile_opts INTERFACE)
 target_compile_features(myproj_compile_opts
@@ -63,4 +67,9 @@ if(myproj_ENABLE_FUZZ_TEST)
     if(myproj_FUZZ_COMPILE)
         add_subdirectory(fuzztest)
     endif()
+endif()
+
+if(myproj_ENABLE_BENCHMARK)
+    message(STATUS "Benchmark enabled")
+    add_subdirectory(benchmark)
 endif()
