@@ -1,5 +1,9 @@
-#include <iostream>
+#ifdef ENABLE_MODULE
+import lib;
+#else
+#include "lib.hxx"
+#endif
 auto main() -> int {
-    std::cout << "Hello world\n";
+    say_hello();
     return 0;
 }
