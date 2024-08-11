@@ -7,13 +7,14 @@ include(CheckCXXSourceCompiles)
 # set PCH headers when PCH is enabled
 macro(set_pch_options)
     cmake_parse_arguments(myproj "" "" PCH ${ARGN})
+    target_precompile_headers(myproj_compile_opts INTERFACE ${myproj_PCH})
 endmacro()
 
 # local configs
 macro(myproj_local_config)
-    if(myproj_ENABLE_PCH)
-        target_precompile_headers(myproj_compile_opts INTERFACE ${myproj_PCH})
-    endif()
+    # if(myproj_ENABLE_PCH)
+    #     target_precompile_headers(myproj_compile_opts INTERFACE ${myproj_PCH})
+    # endif()
 
     if(NOT myproj_ENABLE_OPTIMIZATION)
         if(MSVC)
