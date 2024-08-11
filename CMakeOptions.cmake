@@ -48,8 +48,14 @@ cmake_dependent_option(myproj_USE_LIBCXX "Use libc++ instead" OFF
                        "\"${CMAKE_CXX_COMPILER_ID}\" MATCHES \".*Clang\"" OFF)
 
 # options to include more subdirs
-option(myproj_ENABLE_UNIT_TEST "Build unit test executable" OFF)
-option(myproj_ENABLE_FUZZ_TEST "Build fuzz test executable" OFF)
+option(myproj_ENABLE_UNIT_TEST
+       "Build unit test executable. Requires GoogleTest." OFF)
+option(myproj_ENABLE_FUZZ_TEST
+       "Build fuzz test executable. Requires libFuzzer." OFF)
+option(
+    myproj_ENABLE_BENCHMARK
+    "Build micro-benchmark executable. Requires GoogleTest to be installed alongside Google Benchmark."
+    OFF)
 
 # installing and packing
 cmake_dependent_option(myproj_INSTALL "Configure installation for this project"
@@ -67,6 +73,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
         myproj_WARNING_AS_ERR
         myproj_ENABLE_UNIT_TEST
         myproj_ENABLE_FUZZ_TEST
+        myproj_ENABLE_BENCHMARK
         myproj_ENABLE_OPTIMIZATION
         myproj_ENABLE_COVERAGE
         myproj_ENABLE_PCH
