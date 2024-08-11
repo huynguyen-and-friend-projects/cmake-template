@@ -2,6 +2,8 @@
 # Global option configurations
 # ##############################################################################
 
+include(CheckCXXSourceCompiles)
+
 # global configurations
 macro(myproj_global_config)
     # ccache
@@ -45,6 +47,16 @@ macro(myproj_global_config)
         else(MSVC)
             add_compile_options(
                 "-Wall;-Wextra;-Wshadow;-Wformat=2;-Wconversion")
+        endif()
+    endif()
+
+    # libc++
+    if(myproj_USE_LIBCXX)
+        include(cmake/CheckLibcxxSourceCompile.cmake)
+        myproj_check_libcxx_compile(myproj_LIBCXX_COMPILE)
+        if(myproj_LIBCXX_COMPILE)
+            set(CMAKE_CXX_LINKER_FLAGS
+                "${CMAKE_CXX_LINKER_FLAGS} -stdlib=libc++;-lc++abi")
         endif()
     endif()
 

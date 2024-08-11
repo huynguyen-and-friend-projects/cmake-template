@@ -105,15 +105,4 @@ macro(myproj_local_config)
         target_link_libraries(myproj_compile_opts INTERFACE "-fsanitize=thread")
     endif()
 
-    if(myproj_USE_LIBCXX)
-        include(cmake/CheckLibcxxSourceCompile.cmake)
-        myproj_check_libcxx_compile(myproj_LIBCXX_COMPILE)
-        if(myproj_LIBCXX_COMPILE)
-            target_compile_options(myproj_compile_opts
-                                   INTERFACE "-stdlib=libc++")
-            target_link_libraries(myproj_compile_opts
-                                  INTERFACE "-stdlib=libc++")
-        endif()
-    endif()
-
 endmacro()
