@@ -24,8 +24,8 @@ class SampleLibRecipe(ConanFile):
 
     def requirements(self):
         # add requirements as needed
-        # you ain't escaping from unit testing
         self.requires("gtest/1.14.0")
+        self.requires("benchmark/1.8.4")
 
     def build_requirements(self):
         # bleeding edge stuff.
