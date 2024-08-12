@@ -6,47 +6,6 @@
 
 - A somewhat minimalist CMake project configuration.
 
-## Disclaimer
-
-- Limited testing was done for MSVC (Visual Studio). While it is expected that
-this works out of the box for Visual Studio, in reality, it may not be so simple.
-
-- Option between C++20 modules and traditional headers uses some dirty tricks:
-  - Make sure to use either Ninja or Visual Studio as your generator.
-  - First, when module is enabled, `ENABLE_MODULE` is defined.
-  - Then, there's a header named "module\_cfg.h" in the source directory root.
-    - The essentials of this header is the macro `<PROJECT_NAME>_EXPORT`. This
-    macro is redefined as `export` when module is enabled, and nothing otherwise.
-  - Since preprocessor macro cannot contain other preprocessor macros, one has
-  to manually `#ifdef ENABLE_MODULE`. Something like,
-
-  ```cxx
-  #ifdef ENABLE_MODULE
-  module;
-  #else
-  #include "lib.hxx"
-  #endif
-
-  #include <print>
-
-  #ifdef ENABLE_MODULE
-  export module lib;
-  #endif
-  ```
-
-  - And in the file that imports the module:
-
-  ```cxx
-  #ifdef ENABLE_MODULE
-  import lib;
-  #else
-  #include "lib.hxx"
-  #endif
-  ```
-
-  - For most compilers, standard library header is still experimental, and hence
-  not configured with this CMake template.
-
 ## What's included
 
 - Integration with multiple tools:
@@ -135,3 +94,44 @@ ln -s <your build dir>/compile_commands.json compile_commands.json
   target_sources(my_game PRIVATE my_game_source.cxx)
   target_link_libraries(my_game PRIVATE raylib)
   ```
+
+## Note
+
+- Limited testing was done for MSVC (Visual Studio). While it is expected that
+this works out of the box for Visual Studio, in reality, it may not be so simple.
+
+- Option between C++20 modules and traditional headers uses some dirty tricks:
+  - Make sure to use either Ninja or Visual Studio as your generator.
+  - First, when module is enabled, `ENABLE_MODULE` is defined.
+  - Then, there's a header named "module\_cfg.h" in the source directory root.
+    - The essentials of this header is the macro `<PROJECT_NAME>_EXPORT`. This
+    macro is redefined as `export` when module is enabled, and nothing otherwise.
+  - Since preprocessor macro cannot contain other preprocessor macros, one has
+  to manually `#ifdef ENABLE_MODULE`. Something like,
+
+  ```cxx
+  #ifdef ENABLE_MODULE
+  module;
+  #else
+  #include "lib.hxx"
+  #endif
+
+  #include <print>
+
+  #ifdef ENABLE_MODULE
+  export module lib;
+  #endif
+  ```
+
+  - And in the file that imports the module:
+
+  ```cxx
+  #ifdef ENABLE_MODULE
+  import lib;
+  #else
+  #include "lib.hxx"
+  #endif
+  ```
+
+  - For most compilers, standard library header is still experimental, and hence
+  not configured with this CMake template.
