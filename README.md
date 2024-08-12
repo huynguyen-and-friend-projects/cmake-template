@@ -135,3 +135,8 @@ this works out of the box for Visual Studio, in reality, it may not be so simple
 
   - For most compilers, standard library header is still experimental, and hence
   not configured with this CMake template.
+
+## Future plans
+
+- Support for ast\_grep
+  - Such a cool tool. But have to learn about it first.
