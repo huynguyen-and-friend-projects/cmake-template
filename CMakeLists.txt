@@ -10,7 +10,7 @@ project(
     LANGUAGES C CXX
     HOMEPAGE_URL
         "https://github.com/huynguyen-and-friend-projects/cmake-template"
-        DESCRIPTION "Somewhat poratble CMake project template")
+        DESCRIPTION "Somewhat portable CMake project template")
 
 if(NOT CMAKE_CXX_STANDARD)
     message(STATUS "C++ standard not set, default to C++23")
