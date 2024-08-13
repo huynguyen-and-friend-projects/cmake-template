@@ -1,6 +1,4 @@
-# ##############################################################################
 # Project option configurations
-# ##############################################################################
 
 include(CheckCXXSourceCompiles)
 
@@ -12,15 +10,17 @@ endmacro()
 
 # local configs
 macro(myproj_local_config)
-    # if(myproj_ENABLE_PCH)
-    #     target_precompile_headers(myproj_compile_opts INTERFACE ${myproj_PCH})
-    # endif()
-
-    if(NOT myproj_ENABLE_OPTIMIZATION)
+    if(NOT myproj_ENABLE_DEBUG_OPTIMIZATION)
         if(MSVC)
             target_compile_options(myproj_compile_opts INTERFACE "/Od")
         else()
             target_compile_options(myproj_compile_opts INTERFACE "-O0")
+        endif()
+    else()
+        if(MSVC)
+            target_compile_options(myproj_compile_opts INTERFACE "/Og")
+        else()
+            target_compile_options(myproj_compile_opts INTERFACE "-Og")
         endif()
     endif()
 
@@ -29,24 +29,8 @@ macro(myproj_local_config)
             target_compile_options(myproj_compile_opts
                                    INTERFACE "/fsanitize-coverage")
         else()
-            if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-                target_compile_options(myproj_compile_opts
-                                       INTERFACE "--coverage;-ftest-coverage")
-                target_link_libraries(
-                    myproj_compile_opts
-                    INTERFACE "-fprofile-arcs;-ftest-coverage")
-            elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL ".*Clang")
-                target_compile_options(
-                    myproj_compile_opts
-                    INTERFACE
-                        "-fprofile-instr-generate;-fcoverage-mapping;-mllvm;-runtime-counter-relocation"
-                )
-                target_link_libraries(
-                    myproj_compile_opts
-                    INTERFACE
-                        "-fprofile-instr-generate;-fcoverage-mapping;-mllvm;-runtime-counter-relocation"
-                )
-            endif()
+            target_compile_options(myproj_compile_opts INTERFACE "--coverage")
+            target_link_libraries(myproj_compile_opts INTERFACE "--coverage")
         endif()
     endif()
 
@@ -55,10 +39,7 @@ macro(myproj_local_config)
        OR myproj_ENABLE_UBSAN
        OR myproj_ENABLE_MSAN
        OR myproj_ENABLE_TSAN)
-        message(
-            STATUS
-                "Running checks on whether ASan, UBSan, MSan or TSan can be linked"
-        )
+        message(STATUS "Running checks on whether ASan, UBSan, MSan or TSan can be linked")
         myproj_check_san_compile(myproj_ASAN_COMPILE myproj_UBSAN_COMPILE
                                  myproj_MSAN_COMPILE myproj_TSAN_COMPILE)
     endif()
@@ -77,8 +58,7 @@ macro(myproj_local_config)
             target_compile_options(
                 myproj_compile_opts
                 INTERFACE
-                    "-fsanitize=address;-fno-omit-frame-pointer;-fno-optimize-sibling-calls"
-            )
+                    "-fsanitize=address;-fno-omit-frame-pointer;-fno-optimize-sibling-calls")
             target_link_libraries(myproj_compile_opts
                                   INTERFACE "-fsanitize=address")
         endif()
@@ -95,7 +75,8 @@ macro(myproj_local_config)
         target_compile_options(
             myproj_compile_opts
             INTERFACE
-                "-fsanitize=memory;-fno-omit-frame-pointer;-fno-optimize-sibling-calls"
+                "-fsanitize=memory;-fno-omit-frame-pointer;
+                -fno-optimize-sibling-calls"
         )
         target_link_libraries(myproj_compile_opts INTERFACE "-fsanitize=memory")
     endif()
@@ -104,6 +85,11 @@ macro(myproj_local_config)
         target_compile_options(myproj_compile_opts
                                INTERFACE "-fsanitize=thread")
         target_link_libraries(myproj_compile_opts INTERFACE "-fsanitize=thread")
+    endif()
+
+    if(myproj_ENABLE_HARDENING)
+        include(cmake/AddHardeningFlags.cmake)
+        myproj_add_hardening_flags(myproj_compile_opts INTERFACE)
     endif()
 
 endmacro()

@@ -44,8 +44,8 @@ function(myproj_check_san_compile asan_output_var ubsan_output_var
         message(WARNING "TSan is not supported on MSVC")
         set(${ubsan_output_var} OFF)
     else()
-        set(CMAKE_REQUIRED_FLAGS "-fsanitize=memory")
-        set(CMAKE_REQUIRED_LIBRARIES "-fsanitize=memory")
+        set(CMAKE_REQUIRED_FLAGS "-fsanitize=thread")
+        set(CMAKE_REQUIRED_LIBRARIES "-fsanitize=thread")
         check_cxx_source_compiles("${test_code}" ${tsan_output_var})
     endif()
 

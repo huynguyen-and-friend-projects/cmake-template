@@ -1,7 +1,6 @@
-# ##############################################################################
+#
 # List of options
-# ##############################################################################
-
+#
 include(CMakeDependentOption)
 
 # if build type is not set
@@ -15,9 +14,9 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
                  PROPERTY STRING "Debug;Release;MinSizeRel;RelWithDebInfo")
 endif()
 
-# ##############################################################################
+#
 # Global options
-# ##############################################################################
+#
 
 # If there's another top-level project, high chance that project already sets
 # these options.
@@ -32,12 +31,13 @@ cmake_dependent_option(
     myproj_WARNING_AS_ERR "Turn compiler warnings into errors" OFF
     "myproj_ENABLE_WARNING" OFF)
 
-# ##############################################################################
+#
 # Setup for this project only
-# ##############################################################################
+#
 
 option(myproj_ENABLE_COVERAGE "Add coverage flags" OFF)
 option(myproj_ENABLE_PCH "Use precompiled headers" OFF)
+option(myproj_ENABLE_DOXYGEN "Use Doxygen to generate documents" OFF)
 # in my experience, turning this off gives better debug information
 cmake_dependent_option(
     myproj_ENABLE_DEBUG_OPTIMIZATION
@@ -55,9 +55,11 @@ option(myproj_ENABLE_UNIT_TEST
        "Build unit test executable. Requires GoogleTest." OFF)
 option(myproj_ENABLE_FUZZ_TEST
        "Build fuzz test executable. Requires libFuzzer." OFF)
+option(myproj_ENABLE_HARDENING "Add hardening flags to the compiler" OFF)
 option(
     myproj_ENABLE_BENCHMARK
-    "Build micro-benchmark executable. Requires GoogleTest to be installed alongside Google Benchmark."
+    "Build micro-benchmark executable.
+    Requires GoogleTest to be installed alongside Google Benchmark."
     OFF)
 
 # installing and packing
@@ -72,6 +74,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
         myproj_ENABLE_CCACHE
         myproj_ENABLE_LLD
         myproj_ENABLE_LTO
+        myproj_ENABLE_MODULE
         myproj_ENABLE_WARNING
         myproj_WARNING_AS_ERR
         myproj_ENABLE_UNIT_TEST
@@ -80,6 +83,7 @@ if(NOT PROJECT_IS_TOP_LEVEL)
         myproj_ENABLE_OPTIMIZATION
         myproj_ENABLE_COVERAGE
         myproj_ENABLE_PCH
+        myproj_ENABLE_DOXYGEN
         myproj_ENABLE_ASAN
         myproj_ENABLE_UBSAN
         myproj_ENABLE_MSAN
