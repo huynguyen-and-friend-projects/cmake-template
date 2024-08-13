@@ -1,52 +1,50 @@
-# ##############################################################################
+# # # ############################################################################
 # Sanitizer compat check
-# ##############################################################################
+# # # ############################################################################
 
-# check if ASan can be linked
-function(myproj_check_san_compile asan_output_var ubsan_output_var
-         msan_output_var tsan_output_var)
+# check if ASan can be linked,
+# then link whichever sanitizer(s) is/are included
+function(myproj_check_san_compile target visibility)
+    set(sanitizer_list "")
     set(test_code
         "
     int main() {
         return 0;
     }
     ")
-    if(MSVC)
-        set(CMAKE_REQUIRED_DEFINITIONS
-            "-D_DISABLE_VECTOR_ANNOTATION;-D_DISABLE_STRING_ANNOTATION")
-        set(CMAKE_REQUIRED_FLAGS "/fsanitize=address")
-        set(CMAKE_REQUIRED_LIBRARIES "/fsanitize=address")
-    else()
-        set(CMAKE_REQUIRED_FLAGS "-fsanitize=address")
-        set(CMAKE_REQUIRED_LIBRARIES "-fsanitize=address")
-    endif()
-    check_cxx_source_compiles("${test_code}" ${asan_output_var})
 
-    if(MSVC)
-        message(WARNING "UBSan is not supported on MSVC")
-        set(${ubsan_output_var} OFF)
-    else()
-        set(CMAKE_REQUIRED_FLAGS "-fsanitize=undefined")
-        set(CMAKE_REQUIRED_LIBRARIES "-fsanitize=undefined")
-        check_cxx_source_compiles("${test_code}" ${ubsan_output_var})
+    if(myproj_ENABLE_ASAN)
+        list(APPEND san_list "address")
     endif()
-
-    if(MSVC)
-        message(WARNING "MSan is not supported on MSVC")
-        set(${ubsan_output_var} OFF)
-    else()
-        set(CMAKE_REQUIRED_FLAGS "-fsanitize=memory")
-        set(CMAKE_REQUIRED_LIBRARIES "-fsanitize=memory")
-        check_cxx_source_compiles("${test_code}" ${msan_output_var})
+    if(myproj_ENABLE_UBSAN)
+        list(APPEND san_list "undefined")
     endif()
-
+    if(myproj_ENABLE_MSAN)
+        list(APPEND san_list "memory")
+    endif()
+    if(myproj_ENABLE_TSAN)
+        list(APPEND san_list "thread")
+    endif()
+    list(JOIN san_list "," sanitizer_option)
     if(MSVC)
-        message(WARNING "TSan is not supported on MSVC")
-        set(${ubsan_output_var} OFF)
+        set(CMAKE_REQUIRED_FLAGS "/fsanitize=${sanitizer_option}")
+        if(myproj_ENABLE_ASAN)
+            set(CMAKE_REQUIRED_DEFINITIONS
+            "/D_DISABLE_VECTOR_ANNOTATION;/D_DISABLE_STRING_ANNOTATION")
+        endif()
     else()
-        set(CMAKE_REQUIRED_FLAGS "-fsanitize=thread")
-        set(CMAKE_REQUIRED_LIBRARIES "-fsanitize=thread")
-        check_cxx_source_compiles("${test_code}" ${tsan_output_var})
+        set(CMAKE_REQUIRED_FLAGS "-fsanitize=${sanitizer_option}")
+    endif()
+    check_cxx_source_compiles("${test_code}" compiled)
+    if(compiled)
+        if(MSVC)
+            target_compile_definitions(${target} ${visibility} "/D_DISABLE_VECTOR_ANNOTATION;/D_DISABLE_STRING_ANNOTATION")
+            target_compile_options(${target} ${visibility} "/fsanitize=${sanitizer_option}")
+            target_link_options(${target} ${visibility} "/fsanitize=${sanitizer_option}")
+        else()
+            target_compile_options(${target} ${visibility} "-fsanitize=${sanitizer_option};-fno-omit-frame-pointer;-fno-optimize-sibling-calls")
+            target_link_options(${target} ${visibility} "-fsanitize=${sanitizer_option}")
+        endif()
     endif()
 
 endfunction()
