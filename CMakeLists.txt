@@ -73,3 +73,8 @@ if(myproj_ENABLE_BENCHMARK)
     message(STATUS "Benchmark enabled")
     add_subdirectory(benchmark)
 endif()
+
+if(myproj_ENABLE_DOXYGEN)
+    message(STATUS "Doxygen enabled. Generating docs...")
+    include(cmake/Doxygen.cmake)
+endif()
